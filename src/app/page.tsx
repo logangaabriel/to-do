@@ -1,13 +1,22 @@
-"use client";
-import { useState } from "react";
+"use client"
+import { useState } from "react"
+import { TaskList } from "./components/TaskList/TaskList"
 
 export default function Home() {
-  const [taskInput, setTaskInput] = useState('')
+  const [taskInput, setTaskInput] = useState('');
+  const [tasks, setTasks] = useState<string[]>([]);
 
   const handleKeyDown = (evento: React.KeyboardEvent) => {
-    if (evento.key === 'Enter') {
-
+    if (evento.key === 'Enter' && taskInput.trim() !== '') {
+      setTasks([...tasks, taskInput]);
+      setTaskInput('');
     }
+  };
+
+  const removeTask = (index: number) => {
+    const newTasks = [...tasks];
+    newTasks.splice(index, 1);
+    setTasks(newTasks);
   };
 
   return (
@@ -22,37 +31,18 @@ export default function Home() {
           value={taskInput}
           onChange={(e) => setTaskInput(e.target.value)}
           style={{
-            padding: '12px',
+            padding: '15px',
             width: '500px',
-            fontSize: '15px',
+            fontSize: '10px',
             borderRadius: '15px',
             border: '1px solid #ccc',
-            marginBottom: '20px'
+            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)',
+            marginBottom: '20px',
           }}
         />
       </div>
-
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        <li
-          style={{
-            backgroundColor: '#fff',
-            padding: '10px',
-            margin: '10px 0',
-            borderRadius: '10px',
-            width: '500px',
-            marginLeft: 'auto',
-            marginRight: 'auto', 
-            display: 'flex'
-
-          }}>
-               <input
-              type="checkbox"
-              style={{ marginRight: '10px', margin: '0px auto' }}
-            />
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab atque totam rerum tempore enim nam! 
-          Alias eligendi atque repellendus totam, tempore ea quam modi consequatur, ducimus, vel laborum temporibus doloremque?
-        </li>
-      </ul>
+      
+      <TaskList tasks={tasks} removeTask={removeTask} />
     </div>
   );
 }
